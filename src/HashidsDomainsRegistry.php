@@ -12,11 +12,11 @@ class HashidsDomainsRegistry implements HashidsRegistry
     protected $locator;
 
     /**
-     * @var string
+     * @var string|null
      */
     protected $defaultDomain;
 
-    public function __construct (ServiceLocator $locator, $defaultDomain)
+    public function __construct (ServiceLocator $locator, string $defaultDomain = null)
     {
         $this->locator = $locator;
         $this->defaultDomain = $defaultDomain;
