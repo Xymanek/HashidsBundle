@@ -37,6 +37,7 @@ class Configuration implements ConfigurationInterface
                     ])
                 ->end()
                 ->arrayNode('listeners')
+                    ->addDefaultsIfNotSet()
                     ->children()
                         ->booleanNode('annotations')->defaultTrue()->end()
                     ->end()
