@@ -26,7 +26,7 @@ class HashidsDomainsRegistry implements HashidsRegistry
     {
         if ($domain === null) {
             if ($this->defaultDomain === null) {
-                throw new \InvalidArgumentException('Default hashids domain not set');
+                throw new \InvalidArgumentException('Default hashids domain is not set');
             }
 
             $domain = $this->defaultDomain;

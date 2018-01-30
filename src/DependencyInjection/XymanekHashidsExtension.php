@@ -27,6 +27,10 @@ class XymanekHashidsExtension extends Extension
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
+        if (!$config['listeners']['annotations']) {
+            $container->removeDefinition('xymanek_hashids.event_listener.annotations');
+        }
+
         $map = [];
 
         foreach ($config['domains'] as $domain => $options) {

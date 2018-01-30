@@ -36,6 +36,11 @@ class Configuration implements ConfigurationInterface
                         ]
                     ])
                 ->end()
+                ->arrayNode('listeners')
+                    ->children()
+                        ->booleanNode('annotations')->defaultTrue()->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;

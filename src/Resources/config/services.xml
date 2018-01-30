@@ -26,8 +26,8 @@
             <tag name="twig.extension"/>
         </service>
 
-        <service id="xymanek_hashids.event_listener.hashids" public="false"
-                 class="Xymanek\HashidsBundle\EventListener\HashidsEventListener">
+        <service id="xymanek_hashids.event_listener.annotations" public="false"
+                 class="Xymanek\HashidsBundle\EventListener\DecodeHashidAnnotationListener">
             <argument id="hashids_registry" type="service"/>
             <argument id="annotation_reader" type="service"/>
 

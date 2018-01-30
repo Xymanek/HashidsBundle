@@ -9,7 +9,7 @@ use Xymanek\HashidsBundle\Annotation\DecodeHashid;
 use Xymanek\HashidsBundle\Exception\DecodingFailureException;
 use Xymanek\HashidsBundle\HashidsDomainsRegistry;
 
-class HashidsEventListener
+class DecodeHashidAnnotationListener
 {
     /**
      * @var Reader
