@@ -4,22 +4,19 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <parameters>
-        <parameter key="xymanek_hashids.class">Hashids\Hashids</parameter>
-        <parameter key="xymanek_hashids.default_domain">default</parameter>
-    </parameters>
-
     <services>
-        <service id="xymanek_hashids.abstract" class="%xymanek_hashids.class%" public="true" abstract="true">
-            <!-- Salt -->
-            <!-- Minimum hash length -->
-            <!-- Alphabet -->
+        <service id="xymanek_hashids.abstract" class="Hashids\Hashids" public="true" abstract="true">
+            <argument/><!-- Salt -->
+            <argument/><!-- Minimum hash length -->
+            <argument/><!-- Alphabet -->
         </service>
 
-        <service id="hashids_registry" class="Xymanek\HashidsBundle\HashidsDomainsRegistry">
-            <argument id="xymanek_hashids.resolver" type="service"/>
-            <argument>%xymanek_hashids.default_domain%</argument>
+        <service id="xymanek_hashids.registry" class="Xymanek\HashidsBundle\HashidsDomainsRegistry" public="true">
+            <argument/><!-- Service locator -->
+            <argument/><!-- Default domain -->
         </service>
+
+        <service id="hashids_registry" alias="xymanek_hashids.registry" public="true"/>
 
         <service id="xymanek_hashids.twig_extension.hashids" public="false"
                  class="Xymanek\HashidsBundle\Twig\Extension\HashidsExtension">

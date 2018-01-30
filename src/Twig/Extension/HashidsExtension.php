@@ -32,12 +32,4 @@ class HashidsExtension extends \Twig_Extension
     {
         return $this->registry->get($domain)->decode($hash);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName ()
-    {
-        return 'hashids';
-    }
 }

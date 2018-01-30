@@ -1,9 +1,10 @@
 <?php
 namespace Xymanek\HashidsBundle;
 
+use Hashids\HashidsInterface;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 
-class HashidsDomainsRegistry
+class HashidsDomainsRegistry implements HashidsRegistry
 {
     /**
      * @var ServiceLocator
@@ -21,11 +22,7 @@ class HashidsDomainsRegistry
         $this->defaultDomain = $defaultDomain;
     }
 
-    /**
-     * @param string|null $domain
-     * @return \Hashids\Hashids
-     */
-    public function get (string $domain = null)
+    public function get (string $domain = null): HashidsInterface
     {
         if ($domain === null) {
             if ($this->defaultDomain === null) {

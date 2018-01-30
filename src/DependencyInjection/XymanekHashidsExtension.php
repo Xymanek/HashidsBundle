@@ -3,10 +3,10 @@ namespace Xymanek\HashidsBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
+use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class XymanekHashidsExtension extends Extension
@@ -34,18 +34,18 @@ class XymanekHashidsExtension extends Extension
 
             $container
                 ->setDefinition($service, new ChildDefinition('xymanek_hashids.abstract'))
-                ->setArguments([$options['salt'], $options['min_hash_length'], $options['alphabet']]);
+                ->replaceArgument(0, $options['salt'])
+                ->replaceArgument(1, $options['min_hash_length'])
+                ->replaceArgument(2, $options['alphabet']);
         }
 
-        $container->setParameter('xymanek_hashids.default_domain', $config['default_domain']);
+        $container->findDefinition('hashids_registry')->replaceArgument(1, $config['default_domain']);
 
         if ($config['default_domain'] !== null) {
             $container->setAlias('hashids', 'hashids.' . $config['default_domain']);
         }
 
-        $container->register('xymanek_hashids.resolver', ServiceLocator::class)
-            ->setPublic(false)
-            ->addTag('container.service_locator')
-            ->setArgument(0, $map);
+        $container->findDefinition('xymanek_hashids.registry')
+            ->replaceArgument(0, ServiceLocatorTagPass::register($container, $map));
     }
 }

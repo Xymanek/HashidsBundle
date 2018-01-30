@@ -6,10 +6,12 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 
 class Configuration implements ConfigurationInterface
 {
+    const DEFAULT_ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+
     /**
      * {@inheritdoc}
      */
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder ()
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('xymanek_hashids');
@@ -23,10 +25,16 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->scalarNode('salt')->defaultValue('')->end()
                             ->scalarNode('min_hash_length')->defaultValue(0)->end()
-                            ->scalarNode('alphabet')->defaultValue('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890')->end()
+                            ->scalarNode('alphabet')->defaultValue(self::DEFAULT_ALPHABET)->end()
                         ->end()
                     ->end()
-                    ->defaultValue(['default' => ['salt' => '', 'min_hash_length' => 0, 'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890']])
+                    ->defaultValue([
+                        'default' => [
+                            'salt' => '',
+                            'min_hash_length' => 0,
+                            'alphabet' => self::DEFAULT_ALPHABET,
+                        ]
+                    ])
                 ->end()
             ->end();
 
