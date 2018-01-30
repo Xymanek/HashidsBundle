@@ -20,6 +20,9 @@ class HashidsExtension extends \Twig_Extension
         return [
             new \Twig_SimpleFilter('hashid_encode', [$this, 'encode']),
             new \Twig_SimpleFilter('hashid_decode', [$this, 'decode']),
+
+            new \Twig_SimpleFilter('hashids_encode', [$this, 'encode']),
+            new \Twig_SimpleFilter('hashids_decode', [$this, 'decode']),
         ];
     }
 

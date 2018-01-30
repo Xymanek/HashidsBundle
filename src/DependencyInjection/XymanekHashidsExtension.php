@@ -1,6 +1,7 @@
 <?php
 namespace Xymanek\HashidsBundle\DependencyInjection;
 
+use Hashids\HashidsInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\ServiceLocatorTagPass;
@@ -39,13 +40,13 @@ class XymanekHashidsExtension extends Extension
                 ->replaceArgument(2, $options['alphabet']);
         }
 
-        $container->findDefinition('hashids_registry')->replaceArgument(1, $config['default_domain']);
-
         if ($config['default_domain'] !== null) {
+            $container->setAlias(HashidsInterface::class, 'hashids.' . $config['default_domain']);
             $container->setAlias('hashids', 'hashids.' . $config['default_domain']);
         }
 
         $container->findDefinition('xymanek_hashids.registry')
-            ->replaceArgument(0, ServiceLocatorTagPass::register($container, $map));
+            ->replaceArgument(0, ServiceLocatorTagPass::register($container, $map))
+            ->replaceArgument(1, $config['default_domain']);
     }
 }

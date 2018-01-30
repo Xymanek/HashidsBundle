@@ -16,6 +16,7 @@
             <argument/><!-- Default domain -->
         </service>
 
+        <service id="Xymanek\HashidsBundle\HashidsRegistry" alias="xymanek_hashids.registry" public="true"/>
         <service id="hashids_registry" alias="xymanek_hashids.registry" public="true"/>
 
         <service id="xymanek_hashids.twig_extension.hashids" public="false"
