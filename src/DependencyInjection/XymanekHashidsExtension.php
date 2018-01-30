@@ -21,7 +21,7 @@ class XymanekHashidsExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         if ($config['default_domain'] !== null && !isset($config['domains'][$config['default_domain']])) {
-            throw new \InvalidArgumentException('The specified default domain does not exist');
+            throw new \InvalidArgumentException('The specified default domain is not configured');
         }
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));

@@ -32,4 +32,61 @@ class ConfigurationTest extends TestCase
             ],
         ]);
     }
+
+    public function testDomainOptionsArePopulatedIfNotSet ()
+    {
+        $this->assertProcessedConfigurationEquals(
+            [
+                [
+                    'domains' => [
+                        'custom' => [
+                            'min_hash_length' => 20,
+                        ]
+                    ]
+                ]
+            ],
+            [
+                'domains' => [
+                    'custom' => [
+                        'salt' => '',
+                        'min_hash_length' => 20,
+                        'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
+                    ]
+                ],
+            ],
+            'domains'
+        );
+    }
+
+    public function testNoDomainsInvalid ()
+    {
+        $this->assertConfigurationIsInvalid([[
+            'domains' => [],
+        ]]);
+    }
+
+    public function testModifyDefaultOptions ()
+    {
+        $this->assertProcessedConfigurationEquals(
+            [
+                [
+                    'domains' => [
+                        'default' => [
+                            'min_hash_length' => 20,
+                        ]
+                    ]
+                ]
+            ],
+            [
+                'domains' => [
+                    'default' => [
+                        'salt' => '',
+                        'min_hash_length' => 20,
+                        'alphabet' => 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890',
+                    ]
+                ],
+            ],
+            'domains'
+        );
+    }
 }

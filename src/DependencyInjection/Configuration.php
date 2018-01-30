@@ -21,6 +21,7 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('default_domain')->defaultValue('default')->end()
                 ->arrayNode('domains')
                     ->useAttributeAsKey('name')
+                    ->requiresAtLeastOneElement()
                     ->prototype('array')
                         ->children()
                             ->scalarNode('salt')->defaultValue('')->end()

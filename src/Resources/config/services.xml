@@ -19,7 +19,7 @@
         <service id="Xymanek\HashidsBundle\HashidsRegistry" alias="xymanek_hashids.registry" public="true"/>
         <service id="hashids_registry" alias="xymanek_hashids.registry" public="true"/>
 
-        <service id="xymanek_hashids.twig_extension.hashids" public="false"
+        <service id="xymanek_hashids.twig_extension" public="false"
                  class="Xymanek\HashidsBundle\Twig\Extension\HashidsExtension">
             <argument id="hashids_registry" type="service"/>
 
