@@ -1,16 +1,16 @@
 <?php
 namespace Xymanek\HashidsBundle\Twig\Extension;
 
-use Xymanek\HashidsBundle\HashidsDomainsRegistry;
+use Xymanek\HashidsBundle\HashidsRegistry;
 
 class HashidsExtension extends \Twig_Extension
 {
     /**
-     * @var HashidsDomainsRegistry
+     * @var HashidsRegistry
      */
     protected $registry;
 
-    public function __construct (HashidsDomainsRegistry $registry)
+    public function __construct (HashidsRegistry $registry)
     {
         $this->registry = $registry;
     }

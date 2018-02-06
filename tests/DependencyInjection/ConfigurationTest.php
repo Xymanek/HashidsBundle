@@ -29,6 +29,7 @@ class ConfigurationTest extends TestCase
             ],
             'listeners' => [
                 'annotations' => true,
+                'request_attribute' => true,
             ],
         ]);
     }

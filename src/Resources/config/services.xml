@@ -4,6 +4,11 @@
            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+    <parameters>
+        <parameter id="xymanek_hashids.event_listener.annotations.priority">5</parameter>
+        <parameter id="xymanek_hashids.event_listener.route_attribute.priority">30</parameter>
+    </parameters>
+
     <services>
         <service id="xymanek_hashids.abstract" class="Hashids\Hashids" public="true" abstract="true">
             <argument/><!-- Salt -->
@@ -13,7 +18,7 @@
 
         <service id="xymanek_hashids.registry" class="Xymanek\HashidsBundle\HashidsDomainsRegistry" public="true">
             <argument/><!-- Service locator -->
-            <argument/><!-- Default domain -->
+            <argument>%xymanek_hashids.default_domain%</argument>
         </service>
 
         <service id="Xymanek\HashidsBundle\HashidsRegistry" alias="xymanek_hashids.registry" public="true"/>
@@ -31,7 +36,17 @@
             <argument id="hashids_registry" type="service"/>
             <argument id="annotation_reader" type="service"/>
 
-            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController" priority="5"/>
+            <tag name="kernel.event_listener" event="kernel.controller" method="onKernelController"
+                 priority="%xymanek_hashids.event_listener.annotations.priority%"/>
+        </service>
+
+        <service id="xymanek_hashids.event_listener.request_attribute" public="false"
+                 class="Xymanek\HashidsBundle\EventListener\RequestAttributeListener">
+            <argument id="hashids_registry" type="service"/>
+            <argument>%xymanek_hashids.default_domain%</argument>
+
+            <tag name="kernel.event_listener" event="kernel.request" method="onKernelRequest"
+                 priority="%xymanek_hashids.event_listener.route_attribute.priority%"/>
         </service>
     </services>
 </container>

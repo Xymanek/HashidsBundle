@@ -41,6 +41,7 @@ class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->booleanNode('annotations')->defaultTrue()->end()
+                        ->booleanNode('request_attribute')->defaultTrue()->end()
                     ->end()
                 ->end()
             ->end();

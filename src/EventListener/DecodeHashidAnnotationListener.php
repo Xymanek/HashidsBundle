@@ -7,7 +7,7 @@ use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Xymanek\HashidsBundle\Annotation\DecodeHashid;
 use Xymanek\HashidsBundle\Exception\DecodingFailureException;
-use Xymanek\HashidsBundle\HashidsDomainsRegistry;
+use Xymanek\HashidsBundle\HashidsRegistry;
 
 class DecodeHashidAnnotationListener
 {
@@ -17,11 +17,11 @@ class DecodeHashidAnnotationListener
     protected $annotationReader;
 
     /**
-     * @var HashidsDomainsRegistry
+     * @var HashidsRegistry
      */
     protected $registry;
 
-    public function __construct (HashidsDomainsRegistry $registry, Reader $annotationReader)
+    public function __construct (HashidsRegistry $registry, Reader $annotationReader)
     {
         $this->annotationReader = $annotationReader;
         $this->registry = $registry;
