@@ -20,9 +20,9 @@ final class DecodeHashid
     public $decodedKey = 'id';
 
     /**
-     * @var string
+     * @var string|null
      */
-    public $domain = null;
+    public $domain;
 
     /**
      * @Enum({"EXCEPTION", "HTTP_NOT_FOUND", "CONTROLLER_METHOD", "SET_NULL"})
@@ -37,9 +37,9 @@ final class DecodeHashid
      * * The request object
      * * The attribute key that failed decoding
      *
-     * @var string
+     * @var string|null
      */
-    public $method = null;
+    public $method;
 
     /**
      * @Enum({"ALWAYS_FIRST", "ARRAY_IF_MULTIPLE", "ALWAYS_ARRAY"})

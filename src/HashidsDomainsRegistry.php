@@ -2,6 +2,7 @@
 namespace Xymanek\HashidsBundle;
 
 use Hashids\HashidsInterface;
+use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceException;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Xymanek\HashidsBundle\Exception\InvalidDomainException;
@@ -24,6 +25,13 @@ class HashidsDomainsRegistry implements HashidsRegistry
         $this->defaultDomain = $defaultDomain;
     }
 
+    /**
+     * @param string|null $domain
+     * @return HashidsInterface
+     *
+     * @throws InvalidDomainException
+     * @throws ServiceCircularReferenceException
+     */
     public function get (string $domain = null): HashidsInterface
     {
         if ($domain === null) {

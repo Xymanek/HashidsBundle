@@ -6,16 +6,10 @@ namespace Xymanek\HashidsBundle\EventListener;
 use InvalidArgumentException;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Xymanek\HashidsBundle\HashidsRegistry;
 
 class RequestAttributeListener extends AbstractDecoderListener
 {
     const REQUEST_ATTRIBUTE = 'decode_hashids';
-
-    public function __construct (HashidsRegistry $registry)
-    {
-        parent::__construct($registry);
-    }
 
     public function onKernelRequest (GetResponseEvent $event)
     {

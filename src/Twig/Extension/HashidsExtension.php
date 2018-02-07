@@ -15,7 +15,7 @@ class HashidsExtension extends \Twig_Extension
         $this->registry = $registry;
     }
 
-    public function getFilters ()
+    public function getFilters (): array
     {
         return [
             new \Twig_SimpleFilter('hashid_encode', [$this, 'encode']),
