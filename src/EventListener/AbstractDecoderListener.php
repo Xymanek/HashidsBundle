@@ -5,7 +5,6 @@ namespace Xymanek\HashidsBundle\EventListener;
 
 use LogicException;
 use stdClass;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Xymanek\HashidsBundle\Exception\DecodingFailureException;
@@ -38,10 +37,11 @@ abstract class AbstractDecoderListener
      * @param string      $encodedKey
      * @param string      $decodedKey
      * @param string      $invalidBehaviour One of INVALID_BEHAVIOUR_* constants
-     * @param string      $arrayBehaviour One of ARRAY_BEHAVIOUR_* constants
+     * @param string      $arrayBehaviour   One of ARRAY_BEHAVIOUR_* constants
      *
      * @throws DecodingFailureException
      * @throws NotFoundHttpException
+     * @throws InvalidDomainException
      */
     protected function decodeFromRequest (
         Request $request,
@@ -51,18 +51,11 @@ abstract class AbstractDecoderListener
         string $invalidBehaviour,
         string $arrayBehaviour
     ) {
-        try {
-            $hashids = $this->registry->get($domain);
-        } catch (ServiceNotFoundException $e) {
-            // TODO: Move this to registry
-            throw new InvalidDomainException("Hashids domain $domain does not exist", 0, $e);
-        }
-
         $testMissing = new stdClass();
         $encoded = $request->get($encodedKey, $testMissing);
 
         if ($encoded !== $testMissing) {
-            $decoded = $hashids->decode($encoded);
+            $decoded = $this->registry->get($domain)->decode($encoded);
 
             if (empty($decoded)) {
                 $decoded = $this->failDecoding(

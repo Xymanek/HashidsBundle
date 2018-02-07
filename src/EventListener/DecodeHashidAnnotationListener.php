@@ -29,7 +29,7 @@ class DecodeHashidAnnotationListener extends AbstractDecoderListener
 
         if (is_array($controller)) {
             $reflection = new \ReflectionMethod($controller[0], $controller[1]);
-        } elseif (is_object($controller) && is_callable($controller, '__invoke')) {
+        } elseif (is_object($controller) && is_callable($controller)) {
             $reflection = new \ReflectionMethod($controller, '__invoke');
         } else {
             $reflection = new \ReflectionFunction($controller);

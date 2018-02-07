@@ -2,8 +2,9 @@
 namespace Xymanek\HashidsBundle;
 
 use Hashids\HashidsInterface;
-use InvalidArgumentException;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ServiceLocator;
+use Xymanek\HashidsBundle\Exception\InvalidDomainException;
 
 class HashidsDomainsRegistry implements HashidsRegistry
 {
@@ -27,13 +28,17 @@ class HashidsDomainsRegistry implements HashidsRegistry
     {
         if ($domain === null) {
             if ($this->defaultDomain === null) {
-                throw new InvalidArgumentException('Default hashids domain is not set');
+                throw new InvalidDomainException('Default hashids domain is not set');
             }
 
             $domain = $this->defaultDomain;
         }
 
-        return $this->locator->get($domain);
+        try {
+            return $this->locator->get($domain);
+        } catch (ServiceNotFoundException $e) {
+            throw new InvalidDomainException("Hashids domain $domain does not exist", 0, $e);
+        }
     }
 
     /**
