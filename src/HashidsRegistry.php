@@ -8,4 +8,9 @@ use Hashids\HashidsInterface;
 interface HashidsRegistry
 {
     public function get (string $domain = null): HashidsInterface;
+
+    /**
+     * @return string|null
+     */
+    public function getDefaultDomain();
 }

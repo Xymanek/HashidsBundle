@@ -8,24 +8,13 @@ use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Xymanek\HashidsBundle\HashidsRegistry;
 
-class RequestAttributeListener
+class RequestAttributeListener extends AbstractDecoderListener
 {
     const REQUEST_ATTRIBUTE = 'decode_hashids';
 
-    /**
-     * @var HashidsRegistry
-     */
-    private $registry;
-
-    /**
-     * @var string
-     */
-    private $defaultDomain;
-
-    public function __construct (HashidsRegistry $registry, string $defaultDomain = null)
+    public function __construct (HashidsRegistry $registry)
     {
-        $this->registry = $registry;
-        $this->defaultDomain = $defaultDomain;
+        parent::__construct($registry);
     }
 
     public function onKernelRequest (GetResponseEvent $event)
@@ -57,7 +46,14 @@ class RequestAttributeListener
         }
 
         foreach ($options as $parameter => $config) {
-            // TODO
+            $this->decodeFromRequest(
+                $request,
+                $config['domain'],
+                $parameter,
+                $config['target'],
+                $config['behaviour_invalid'],
+                $config['behaviour_array']
+            );
         }
     }
 
@@ -71,21 +67,23 @@ class RequestAttributeListener
                 'behaviour_array' => 'array_if_multiple',
             ])
             ->setRequired('target')
-            ->setAllowedTypes('domain', 'string')
+            ->setAllowedTypes('domain', ['string', 'null'])
             ->setAllowedTypes('target', 'string')
             ->setAllowedValues('behaviour_invalid', [
-                'exception',
-                'http_not_found',
-                'set_null',
+                self::INVALID_BEHAVIOUR_EXCEPTION,
+                self::INVALID_BEHAVIOUR_HTTP_NOT_FOUND,
+                self::INVALID_BEHAVIOUR_SET_NULL,
             ])
             ->setAllowedValues('behaviour_array', [
-                'always_array',
-                'array_if_multiple',
-                'always_array',
+                self::ARRAY_BEHAVIOUR_ALWAYS_FIRST,
+                self::ARRAY_BEHAVIOUR_ARRAY_IF_MULTIPLE,
+                self::ARRAY_BEHAVIOUR_ALWAYS_ARRAY,
             ]);
 
-        if ($this->defaultDomain !== null) {
-            $resolver->setDefault('domain', $this->defaultDomain);
+        $defaultDomain = $this->registry->getDefaultDomain();
+
+        if ($defaultDomain !== null) {
+            $resolver->setDefault('domain', $defaultDomain);
         }
 
         return $resolver;

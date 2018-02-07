@@ -24,8 +24,6 @@ class XymanekHashidsExtension extends Extension
             throw new \InvalidArgumentException('The specified default domain is not configured');
         }
 
-        $container->setParameter('xymanek_hashids.default_domain', $config['default_domain']);
-
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.xml');
 
@@ -55,6 +53,7 @@ class XymanekHashidsExtension extends Extension
         }
 
         $container->findDefinition('xymanek_hashids.registry')
-            ->replaceArgument(0, ServiceLocatorTagPass::register($container, $map));
+            ->replaceArgument(0, ServiceLocatorTagPass::register($container, $map))
+            ->replaceArgument(1, $config['default_domain']);
     }
 }

@@ -2,29 +2,22 @@
 namespace Xymanek\HashidsBundle\EventListener;
 
 use Doctrine\Common\Annotations\Reader;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\HttpKernel\Event\FilterControllerEvent;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Xymanek\HashidsBundle\Annotation\DecodeHashid;
 use Xymanek\HashidsBundle\Exception\DecodingFailureException;
 use Xymanek\HashidsBundle\HashidsRegistry;
 
-class DecodeHashidAnnotationListener
+class DecodeHashidAnnotationListener extends AbstractDecoderListener
 {
     /**
      * @var Reader
      */
     protected $annotationReader;
 
-    /**
-     * @var HashidsRegistry
-     */
-    protected $registry;
-
     public function __construct (HashidsRegistry $registry, Reader $annotationReader)
     {
+        parent::__construct($registry);
         $this->annotationReader = $annotationReader;
-        $this->registry = $registry;
     }
 
     public function onKernelController (FilterControllerEvent $event)
@@ -58,71 +51,41 @@ class DecodeHashidAnnotationListener
                 }
 
                 if ($annotation->method == null) {
+                    // TODO: Move this check to annotation itself
                     throw new \InvalidArgumentException(
                         '"CONTROLLER_METHOD" option requires method property to be set'
                     );
                 }
             }
 
-            $domain = $annotation->domain;
-
-            try {
-                $hashids = $this->registry->get($domain);
-            } catch (ServiceNotFoundException $e) {
-                throw new DecodingFailureException("Hashids domain $domain does not exist", 0, $e);
-            }
-
             foreach ($annotation->map as $encodedKey => $decodedKey) {
-                if (!$request->attributes->has($encodedKey)) {
-                    throw new DecodingFailureException("Request attribute $encodedKey does not exist");
+                $behaviourInvalid = $annotation->behaviourInvalid;
+
+                if ($behaviourInvalid === 'CONTROLLER_METHOD') {
+                    $behaviourInvalid = self::INVALID_BEHAVIOUR_EXCEPTION;
                 }
 
-                $encoded = $request->attributes->get($encodedKey);
-                $decoded = $hashids->decode($encoded);
+                try {
+                    $this->decodeFromRequest(
+                        $request,
+                        $annotation->domain,
+                        $encodedKey,
+                        $decodedKey,
+                        $behaviourInvalid,
+                        $annotation->behaviourArray
+                    );
+                } catch (DecodingFailureException $e) {
+                    if ($annotation->behaviourInvalid === 'CONTROLLER_METHOD') {
+                        if (is_object($controller)) {
+                            $controller = [$controller];
+                        }
 
-                if ($decoded === '' || count($decoded) === 0) {
-                    switch ($annotation->behaviourInvalid) {
-                        case 'EXCEPTION':
-                            throw new DecodingFailureException('Invalid encoded version');
-                        break;
-
-                        case 'HTTP_NOT_FOUND':
-                            throw new NotFoundHttpException("Failed to decode hashid from $encodedKey request attribute");
-                        break;
-
-                        case 'CONTROLLER_METHOD':
-                            if (is_object($controller)) {
-                                $controller = [$controller];
-                            }
-
-                            call_user_func([$controller[0], $annotation->method], $request, $encodedKey);
-                        break;
-
-                        case 'SET_NULL':
-                            $decoded = [null];
-                        break;
+                        call_user_func([$controller[0], $annotation->method], $request, $encodedKey);
+                    } else {
+                        throw $e;
                     }
                 }
-
-                switch ($annotation->behaviourArray) {
-                    case 'ALWAYS_FIRST':
-                        $decoded = $decoded[0];
-                    break;
-
-                    case 'ARRAY_IF_MULTIPLE':
-                        if (count($decoded) === 1) {
-                            $decoded = $decoded[0];
-                        }
-                    break;
-
-                    case 'ALWAYS_ARRAY':
-                        //$decoded = $decoded;
-                    break;
-                }
-
-                $request->attributes->set($decodedKey, $decoded);
             }
-
         }
     }
 }
