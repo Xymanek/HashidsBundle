@@ -1,16 +1,23 @@
 <?php
 namespace Xymanek\HashidsBundle\Annotation;
 
+use InvalidArgumentException;
+
 /**
  * @Annotation
  * @Target("METHOD")
  */
-class DecodeHashid
+final class DecodeHashid
 {
     /**
-     * @var array
+     * @var string
      */
-    public $map = ['hashid' => 'id'];
+    public $encodedKey = 'hashid';
+
+    /**
+     * @var string
+     */
+    public $decodedKey = 'id';
 
     /**
      * @var string
@@ -38,4 +45,22 @@ class DecodeHashid
      * @Enum({"ALWAYS_FIRST", "ARRAY_IF_MULTIPLE", "ALWAYS_ARRAY"})
      */
     public $behaviourArray = 'ARRAY_IF_MULTIPLE';
+
+    public function __construct (array $values)
+    {
+        foreach ($values as $key => $value) {
+            if (!property_exists(self::class, $key)) {
+                throw new InvalidArgumentException(sprintf(
+                    'Annotation %s does not have %s property',
+                    self::class, $key
+                ));
+            }
+
+            $this->{$key} = $value;
+        }
+
+        if ($this->behaviourInvalid === 'CONTROLLER_METHOD' && $this->method === null) {
+            throw new InvalidArgumentException('"CONTROLLER_METHOD" option requires method property to be set');
+        }
+    }
 }

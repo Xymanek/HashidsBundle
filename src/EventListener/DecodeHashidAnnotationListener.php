@@ -43,47 +43,36 @@ class DecodeHashidAnnotationListener extends AbstractDecoderListener
                 continue;
             }
 
-            if ($annotation->behaviourInvalid === 'CONTROLLER_METHOD') {
-                if (!$controllerMethodSupported) {
-                    throw new \InvalidArgumentException(
-                        '"CONTROLLER_METHOD" option is not supported when controller is not an object'
-                    );
-                }
-
-                if ($annotation->method == null) {
-                    // TODO: Move this check to annotation itself
-                    throw new \InvalidArgumentException(
-                        '"CONTROLLER_METHOD" option requires method property to be set'
-                    );
-                }
+            if ($annotation->behaviourInvalid === 'CONTROLLER_METHOD' && !$controllerMethodSupported) {
+                throw new \InvalidArgumentException(
+                    '"CONTROLLER_METHOD" option is not supported when controller is not an object'
+                );
             }
 
-            foreach ($annotation->map as $encodedKey => $decodedKey) {
-                $behaviourInvalid = $annotation->behaviourInvalid;
+            $behaviourInvalid = $annotation->behaviourInvalid;
 
-                if ($behaviourInvalid === 'CONTROLLER_METHOD') {
-                    $behaviourInvalid = self::INVALID_BEHAVIOUR_EXCEPTION;
-                }
+            if ($behaviourInvalid === 'CONTROLLER_METHOD') {
+                $behaviourInvalid = self::INVALID_BEHAVIOUR_EXCEPTION;
+            }
 
-                try {
-                    $this->decodeFromRequest(
-                        $request,
-                        $annotation->domain,
-                        $encodedKey,
-                        $decodedKey,
-                        $behaviourInvalid,
-                        $annotation->behaviourArray
-                    );
-                } catch (DecodingFailureException $e) {
-                    if ($annotation->behaviourInvalid === 'CONTROLLER_METHOD') {
-                        if (is_object($controller)) {
-                            $controller = [$controller];
-                        }
-
-                        call_user_func([$controller[0], $annotation->method], $request, $encodedKey);
-                    } else {
-                        throw $e;
+            try {
+                $this->decodeFromRequest(
+                    $request,
+                    $annotation->domain,
+                    $annotation->encodedKey,
+                    $annotation->decodedKey,
+                    $behaviourInvalid,
+                    $annotation->behaviourArray
+                );
+            } catch (DecodingFailureException $e) {
+                if ($annotation->behaviourInvalid === 'CONTROLLER_METHOD') {
+                    if (is_object($controller)) {
+                        $controller = [$controller];
                     }
+
+                    call_user_func([$controller[0], $annotation->method], $request, $annotation->encodedKey);
+                } else {
+                    throw $e;
                 }
             }
         }
