@@ -16,7 +16,8 @@
             <argument/><!-- Alphabet -->
         </service>
 
-        <service id="xymanek_hashids.registry" class="Xymanek\HashidsBundle\HashidsDomainsRegistry" public="true">
+        <service id="xymanek_hashids.registry" public="true"
+                 class="Xymanek\HashidsBundle\ServiceLocatorHashidsRegistry">
             <argument/><!-- Service locator -->
             <argument/><!-- Default domain -->
         </service>

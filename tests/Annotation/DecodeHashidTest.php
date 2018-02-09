@@ -16,9 +16,9 @@ class DecodeHashidTest extends TestCase
 
         $this->assertEquals('hashid', $annotation->getEncodedKey());
         $this->assertEquals('id', $annotation->getDecodedKey());
-        $this->assertEquals(null, $annotation->getDomain());
+        $this->assertNull($annotation->getDomain());
         $this->assertEquals('HTTP_NOT_FOUND', $annotation->getBehaviourInvalid());
-        $this->assertEquals(null, $annotation->getMethod());
+        $this->assertNull($annotation->getMethod());
         $this->assertEquals('ARRAY_IF_MULTIPLE', $annotation->getBehaviourArray());
     }
 

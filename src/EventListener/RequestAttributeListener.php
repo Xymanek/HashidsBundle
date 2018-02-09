@@ -5,7 +5,9 @@ namespace Xymanek\HashidsBundle\EventListener;
 
 use InvalidArgumentException;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Xymanek\HashidsBundle\Exception\NoDefaultHashidsDomainException;
 
 class RequestAttributeListener extends AbstractDecoderListener
 {
@@ -61,7 +63,7 @@ class RequestAttributeListener extends AbstractDecoderListener
                 'behaviour_array' => 'array_if_multiple',
             ])
             ->setRequired('target')
-            ->setAllowedTypes('domain', ['string', 'null'])
+            ->setAllowedTypes('domain', 'string')
             ->setAllowedTypes('target', 'string')
             ->setAllowedValues('behaviour_invalid', [
                 self::INVALID_BEHAVIOUR_EXCEPTION,
@@ -74,10 +76,14 @@ class RequestAttributeListener extends AbstractDecoderListener
                 self::ARRAY_BEHAVIOUR_ALWAYS_ARRAY,
             ]);
 
-        $defaultDomain = $this->registry->getDefaultDomain();
+        $defaultDomain = $this->registry->getDefaultDomainName();
 
         if ($defaultDomain !== null) {
             $resolver->setDefault('domain', $defaultDomain);
+        } else {
+            $resolver->setDefault('domain', function (Options $options) {
+                throw new NoDefaultHashidsDomainException();
+            });
         }
 
         return $resolver;

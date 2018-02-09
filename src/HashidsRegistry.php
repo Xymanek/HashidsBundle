@@ -19,5 +19,5 @@ interface HashidsRegistry
     /**
      * @return string|null
      */
-    public function getDefaultDomain ();
+    public function getDefaultDomainName ();
 }

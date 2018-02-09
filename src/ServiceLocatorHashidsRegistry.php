@@ -8,8 +8,9 @@ use Symfony\Component\DependencyInjection\Exception\ServiceCircularReferenceExce
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Xymanek\HashidsBundle\Exception\InvalidDomainException;
+use Xymanek\HashidsBundle\Exception\NoDefaultHashidsDomainException;
 
-class HashidsDomainsRegistry implements HashidsRegistry
+class ServiceLocatorHashidsRegistry implements HashidsRegistry
 {
     /**
      * @var ServiceLocator
@@ -38,7 +39,7 @@ class HashidsDomainsRegistry implements HashidsRegistry
     {
         if ($domain === null) {
             if ($this->defaultDomain === null) {
-                throw new InvalidDomainException('Default hashids domain is not set');
+                throw new NoDefaultHashidsDomainException();
             }
 
             $domain = $this->defaultDomain;
@@ -54,7 +55,7 @@ class HashidsDomainsRegistry implements HashidsRegistry
     /**
      * @return string|null
      */
-    public function getDefaultDomain ()
+    public function getDefaultDomainName ()
     {
         return $this->defaultDomain;
     }
