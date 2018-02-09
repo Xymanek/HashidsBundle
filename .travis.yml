@@ -1,10 +1,15 @@
 language: php
-install: composer install
+install: composer update
 php:
-  - 7.0
-  - 7.1
-  - 7.2
+    - 7.0
+    - 7.1
+    - 7.2
 
 script:
-- ./vendor/bin/phpunit
-- ./vendor/bin/phpstan analyse -l 7 -c phpstan.neon src tests
+    - ./vendor/bin/phpunit
+
+jobs:
+    include:
+        - stage: PHPStan
+          php: 7.2
+          script: ./vendor/bin/phpstan analyse -l 7 -c phpstan.neon src tests
