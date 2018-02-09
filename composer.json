@@ -29,16 +29,18 @@
         "symfony/options-resolver": "^3.3 || ^4.0"
     },
     "require-dev": {
+        "phpstan/phpstan": "^0.9.2",
+
         "phpunit/phpunit": "^6.5",
         "matthiasnoback/symfony-config-test": "^3.1",
         "matthiasnoback/symfony-dependency-injection-test": "^2.3",
 
-        "symfony/event-dispatcher": "^3.3 || ^4.0",
         "symfony/http-kernel": "^3.3 || ^4.0",
         "symfony/twig-bundle": "^3.3 || ^4.0",
 
         "sensio/framework-extra-bundle": "^5.1",
-        "doctrine/annotations": "^1.6"
+        "doctrine/annotations": "^1.6",
+        "phpstan/phpstan-phpunit": "^0.9.4"
     },
     "minimum-stability": "stable"
 }

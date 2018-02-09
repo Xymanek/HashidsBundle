@@ -32,6 +32,7 @@ class DecodeHashidAnnotationListener extends AbstractDecoderListener
         } elseif (is_object($controller) && is_callable($controller)) {
             $reflection = new \ReflectionMethod($controller, '__invoke');
         } else {
+            // FixMe: Reader::getMethodAnnotations() expectsReflectionMethod, ReflectionFunction|ReflectionMethod given
             $reflection = new \ReflectionFunction($controller);
             $controllerMethodSupported = false;
         }

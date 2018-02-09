@@ -1,0 +1,8 @@
+includes:
+	- vendor/phpstan/phpstan-phpunit/extension.neon
+	- vendor/phpstan/phpstan-phpunit/rules.neon
+	- vendor/phpstan/phpstan-phpunit/strictRules.neon
+parameters:
+	ignoreErrors:
+		- '#Call to an undefined method Symfony\\Component\\Config\\Definition\\Builder\\NodeDefinition::children\(\).#'
+		- '#Parameter \#1 $method of method Doctrine\\Common\\Annotations\\Reader::getMethodAnnotations\(\) expects ReflectionMethod, ReflectionFunction|ReflectionMethod given.#'
