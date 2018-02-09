@@ -12,7 +12,7 @@ use Xymanek\HashidsBundle\HashidsRegistry;
 
 class XymanekHashidsExtensionTest extends AbstractExtensionTestCase
 {
-    protected function getContainerExtensions ()
+    protected function getContainerExtensions (): array
     {
         return [new XymanekHashidsExtension()];
     }
@@ -22,6 +22,15 @@ class XymanekHashidsExtensionTest extends AbstractExtensionTestCase
         $this->load(['listeners' => ['annotations' => false]]);
 
         $this->assertContainerBuilderNotHasService('xymanek_hashids.event_listener.annotations');
+        $this->assertContainerBuilderHasService('xymanek_hashids.event_listener.request_attribute');
+    }
+
+    public function testDisableRequestListener ()
+    {
+        $this->load(['listeners' => ['request_attribute' => false]]);
+
+        $this->assertContainerBuilderNotHasService('xymanek_hashids.event_listener.request_attribute');
+        $this->assertContainerBuilderHasService('xymanek_hashids.event_listener.annotations');
     }
 
     public function testExceptionOnNotConfiguredDefaultDomain ()
@@ -35,6 +44,7 @@ class XymanekHashidsExtensionTest extends AbstractExtensionTestCase
         $this->load();
 
         $this->assertContainerBuilderHasService('xymanek_hashids.event_listener.annotations');
+        $this->assertContainerBuilderHasService('xymanek_hashids.event_listener.request_attribute');
         $this->assertContainerBuilderHasService('xymanek_hashids.twig_extension');
 
         $this->assertContainerBuilderHasAlias(HashidsRegistry::class, 'xymanek_hashids.registry');
@@ -61,6 +71,7 @@ class XymanekHashidsExtensionTest extends AbstractExtensionTestCase
         $this->load(['default_domain' => null]);
 
         $this->assertContainerBuilderHasService('xymanek_hashids.event_listener.annotations');
+        $this->assertContainerBuilderHasService('xymanek_hashids.event_listener.request_attribute');
         $this->assertContainerBuilderHasService('xymanek_hashids.twig_extension');
 
         $this->assertContainerBuilderHasAlias(HashidsRegistry::class, 'xymanek_hashids.registry');
@@ -94,6 +105,7 @@ class XymanekHashidsExtensionTest extends AbstractExtensionTestCase
         ]);
 
         $this->assertContainerBuilderHasService('xymanek_hashids.event_listener.annotations');
+        $this->assertContainerBuilderHasService('xymanek_hashids.event_listener.request_attribute');
         $this->assertContainerBuilderHasService('xymanek_hashids.twig_extension');
 
         $this->assertContainerBuilderHasAlias(HashidsRegistry::class, 'xymanek_hashids.registry');
@@ -111,5 +123,15 @@ class XymanekHashidsExtensionTest extends AbstractExtensionTestCase
 
         $this->assertInstanceOf(Reference::class, $reference);
         $this->assertStringStartsWith('service_locator', (string) $reference);
+    }
+
+    public function testMultipleDomains ()
+    {
+        $this->markTestSkipped('Not implemented yet');
+    }
+
+    public function testMultipleDomainsWithoutDefault ()
+    {
+        $this->markTestSkipped('Not implemented yet');
     }
 }

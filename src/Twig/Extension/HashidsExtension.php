@@ -26,12 +26,12 @@ class HashidsExtension extends \Twig_Extension
         ];
     }
 
-    public function encode ($number, string $domain = null)
+    public function encode ($number, string $domain = null): string
     {
         return $this->registry->get($domain)->encode($number);
     }
 
-    public function decode ($hash, string $domain = null)
+    public function decode ($hash, string $domain = null): array
     {
         return $this->registry->get($domain)->decode($hash);
     }

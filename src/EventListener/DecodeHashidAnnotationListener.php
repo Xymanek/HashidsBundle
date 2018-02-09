@@ -43,13 +43,13 @@ class DecodeHashidAnnotationListener extends AbstractDecoderListener
                 continue;
             }
 
-            if ($annotation->behaviourInvalid === 'CONTROLLER_METHOD' && !$controllerMethodSupported) {
+            if (!$controllerMethodSupported && $annotation->getBehaviourInvalid() === 'CONTROLLER_METHOD') {
                 throw new \InvalidArgumentException(
                     '"CONTROLLER_METHOD" option is not supported when controller is not an object'
                 );
             }
 
-            $behaviourInvalid = $annotation->behaviourInvalid;
+            $behaviourInvalid = $annotation->getBehaviourInvalid();
 
             if ($behaviourInvalid === 'CONTROLLER_METHOD') {
                 $behaviourInvalid = self::INVALID_BEHAVIOUR_EXCEPTION;
@@ -58,19 +58,19 @@ class DecodeHashidAnnotationListener extends AbstractDecoderListener
             try {
                 $this->decodeFromRequest(
                     $request,
-                    $annotation->domain,
-                    $annotation->encodedKey,
-                    $annotation->decodedKey,
+                    $annotation->getDomain(),
+                    $annotation->getEncodedKey(),
+                    $annotation->getDecodedKey(),
                     $behaviourInvalid,
-                    $annotation->behaviourArray
+                    $annotation->getBehaviourArray()
                 );
             } catch (DecodingFailureException $e) {
-                if ($annotation->behaviourInvalid === 'CONTROLLER_METHOD') {
+                if ($annotation->getBehaviourInvalid() === 'CONTROLLER_METHOD') {
                     if (is_object($controller)) {
                         $controller = [$controller];
                     }
 
-                    call_user_func([$controller[0], $annotation->method], $request, $annotation->encodedKey);
+                    call_user_func([$controller[0], $annotation->getMethod()], $request, $annotation->getEncodedKey());
                 } else {
                     throw $e;
                 }

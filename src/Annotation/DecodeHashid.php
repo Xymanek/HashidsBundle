@@ -12,22 +12,24 @@ final class DecodeHashid
     /**
      * @var string
      */
-    public $encodedKey = 'hashid';
+    private $encodedKey = 'hashid';
 
     /**
      * @var string
      */
-    public $decodedKey = 'id';
+    private $decodedKey = 'id';
 
     /**
      * @var string|null
      */
-    public $domain;
+    private $domain;
 
     /**
+     * @var string
+     *
      * @Enum({"EXCEPTION", "HTTP_NOT_FOUND", "CONTROLLER_METHOD", "SET_NULL"})
      */
-    public $behaviourInvalid = 'HTTP_NOT_FOUND';
+    private $behaviourInvalid = 'HTTP_NOT_FOUND';
 
     /**
      * The method to call on controller if $behaviourInvalid === CONTROLLER_METHOD
@@ -39,12 +41,14 @@ final class DecodeHashid
      *
      * @var string|null
      */
-    public $method;
+    private $method;
 
     /**
+     * @var string
+     *
      * @Enum({"ALWAYS_FIRST", "ARRAY_IF_MULTIPLE", "ALWAYS_ARRAY"})
      */
-    public $behaviourArray = 'ARRAY_IF_MULTIPLE';
+    private $behaviourArray = 'ARRAY_IF_MULTIPLE';
 
     public function __construct (array $values)
     {
@@ -62,5 +66,41 @@ final class DecodeHashid
         if ($this->behaviourInvalid === 'CONTROLLER_METHOD' && $this->method === null) {
             throw new InvalidArgumentException('"CONTROLLER_METHOD" option requires method property to be set');
         }
+    }
+
+    public function getEncodedKey (): string
+    {
+        return $this->encodedKey;
+    }
+
+    public function getDecodedKey (): string
+    {
+        return $this->decodedKey;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getDomain ()
+    {
+        return $this->domain;
+    }
+
+    public function getBehaviourInvalid (): string
+    {
+        return $this->behaviourInvalid;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getMethod ()
+    {
+        return $this->method;
+    }
+
+    public function getBehaviourArray (): string
+    {
+        return $this->behaviourArray;
     }
 }
